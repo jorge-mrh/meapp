@@ -20,6 +20,11 @@ interface AuthState {
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  updateProfile: (profileData: {
+    username: string;
+    country: string;
+    age: number;
+  }) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -76,6 +81,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ error, loading: false });
     } else {
       set({ session: null, user: null, profile: null, loading: false });
+    }
+  },
+  updateProfile: async (profileData) => {
+    const { user } = get();
+    if (!user) throw new Error("User not logged in");
+
+    set({ loading: true, error: null });
+    const { data, error } = await supabase
+      .from("profiles")
+      .update(profileData)
+      .eq("id", user.id)
+      .select()
+      .single();
+
+    if (error) {
+      set({ error: null, loading: false });
+      console.error("Error updating profile:", error);
+    } else {
+      // Update the local profile state with the new data
+      set({ profile: data, loading: false });
     }
   },
 }));

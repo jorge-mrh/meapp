@@ -13,6 +13,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
+import { Route as ProtectedCompleteProfileRouteImport } from './routes/_protected/complete-profile'
 import { Route as ProtectedAiRouteImport } from './routes/_protected/ai'
 
 const SignupRoute = SignupRouteImport.update({
@@ -34,6 +35,12 @@ const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedCompleteProfileRoute =
+  ProtectedCompleteProfileRouteImport.update({
+    id: '/complete-profile',
+    path: '/complete-profile',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAiRoute = ProtectedAiRouteImport.update({
   id: '/ai',
   path: '/ai',
@@ -44,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/ai': typeof ProtectedAiRoute
+  '/complete-profile': typeof ProtectedCompleteProfileRoute
   '/': typeof ProtectedIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/ai': typeof ProtectedAiRoute
+  '/complete-profile': typeof ProtectedCompleteProfileRoute
   '/': typeof ProtectedIndexRoute
 }
 export interface FileRoutesById {
@@ -58,19 +67,21 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_protected/ai': typeof ProtectedAiRoute
+  '/_protected/complete-profile': typeof ProtectedCompleteProfileRoute
   '/_protected/': typeof ProtectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/signup' | '/ai' | '/'
+  fullPaths: '/login' | '/signup' | '/ai' | '/complete-profile' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/signup' | '/ai' | '/'
+  to: '/login' | '/signup' | '/ai' | '/complete-profile' | '/'
   id:
     | '__root__'
     | '/_protected'
     | '/login'
     | '/signup'
     | '/_protected/ai'
+    | '/_protected/complete-profile'
     | '/_protected/'
   fileRoutesById: FileRoutesById
 }
@@ -110,6 +121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/complete-profile': {
+      id: '/_protected/complete-profile'
+      path: '/complete-profile'
+      fullPath: '/complete-profile'
+      preLoaderRoute: typeof ProtectedCompleteProfileRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/ai': {
       id: '/_protected/ai'
       path: '/ai'
@@ -122,11 +140,13 @@ declare module '@tanstack/react-router' {
 
 interface ProtectedRouteChildren {
   ProtectedAiRoute: typeof ProtectedAiRoute
+  ProtectedCompleteProfileRoute: typeof ProtectedCompleteProfileRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAiRoute: ProtectedAiRoute,
+  ProtectedCompleteProfileRoute: ProtectedCompleteProfileRoute,
   ProtectedIndexRoute: ProtectedIndexRoute,
 }
 
