@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
-import { useAuthStore } from "@/stores/authStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useUpdateProfile } from "@/hooks/profile/useUpdateProfile";
 
 export const Route = createFileRoute("/_protected/complete-profile")({
   beforeLoad: async () => {
@@ -31,18 +31,25 @@ export const Route = createFileRoute("/_protected/complete-profile")({
 
 function CompleteProfileComponent() {
   const navigate = useNavigate();
-  const { updateProfile, loading, error } = useAuthStore();
+  const {
+    mutate: updateProfile,
+    isPending: loading,
+    error,
+  } = useUpdateProfile();
   const [username, setUsername] = useState("");
   const [country, setCountry] = useState("");
   const [age, setAge] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    await updateProfile({ username, country, age: Number(age) });
-    const updatedState = useAuthStore.getState();
-    if (updatedState.profile?.username) {
-      navigate({ to: "/" });
-    }
+    updateProfile(
+      { username, country, age: Number(age) },
+      {
+        onSuccess: () => {
+          navigate({ to: "/" });
+        },
+      },
+    );
   };
 
   return (

@@ -10,12 +10,13 @@ import { SmartphoneNfc, LogIn, LogOut, MoreHorizontal } from "lucide-react";
 import { DRPDWN_NAV, MAIN_NAV } from "@/lib/types/nav";
 import { useNavigate, useMatchRoute, Link } from "@tanstack/react-router";
 import { useAuthStore } from "@/stores/authStore";
+import { useProfile } from "@/hooks/profile/useFetchProfile";
 
 function MainMenu() {
   const navigate = useNavigate();
   const matchRoute = useMatchRoute();
-  const { session, signOut, profile } = useAuthStore();
-
+  const { session, signOut } = useAuthStore();
+  const { data: profile, isLoading } = useProfile();
   const isProfileComplete = !!profile?.username;
 
   const directUser = (path: string) => {
