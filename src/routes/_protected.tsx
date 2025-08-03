@@ -1,7 +1,7 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabaseClient";
 
-export const Route = createFileRoute("/ai")({
+export const Route = createFileRoute("/_protected")({
   beforeLoad: async () => {
     const {
       data: { session },
@@ -12,9 +12,9 @@ export const Route = createFileRoute("/ai")({
       });
     }
   },
-  component: Ai,
+  component: ProtectedLayout,
 });
 
-function Ai() {
-  return <div>Hello "/ai"!</div>;
+function ProtectedLayout() {
+  return <Outlet />;
 }

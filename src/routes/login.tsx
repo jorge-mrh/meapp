@@ -1,4 +1,3 @@
-// src/routes/login.tsx
 import {
   createFileRoute,
   Link,

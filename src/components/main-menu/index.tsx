@@ -3,6 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SmartphoneNfc, LogIn, LogOut } from "lucide-react";
@@ -18,6 +19,11 @@ function MainMenu() {
 
   const directUser = (path: string) => {
     navigate({ to: path });
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/login" });
   };
 
   return (
@@ -58,28 +64,20 @@ function MainMenu() {
                 {item.label}
               </DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator />
+            {session ? (
+              <DropdownMenuItem onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onClick={() => directUser("/login")}>
+                <LogIn className="mr-2 h-4 w-4" />
+                Sign In
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
-
-        {/* Conditional Sign In / Sign Out Button */}
-        {session ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={signOut}
-          >
-            <LogOut className="h-5 w-5" />
-            <span className="sr-only">Sign Out</span>
-          </Button>
-        ) : (
-          <Button variant="ghost" size="icon" className="rounded-full" asChild>
-            <Link to="/login">
-              <LogIn className="h-5 w-5" />
-              <span className="sr-only">Sign In</span>
-            </Link>
-          </Button>
-        )}
       </nav>
     </div>
   );

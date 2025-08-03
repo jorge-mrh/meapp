@@ -1,4 +1,3 @@
-// src/routes/signup.tsx
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useAuthStore } from "@/stores/authStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

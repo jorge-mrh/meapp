@@ -1,4 +1,3 @@
-// src/stores/authStore.ts
 import { create } from "zustand";
 import { supabase } from "@/lib/supabaseClient";
 import type { Session, User, AuthError } from "@supabase/supabase-js";
