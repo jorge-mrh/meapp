@@ -1,9 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/lib/supabaseClient";
 
 export const Route = createFileRoute("/ai")({
-  component: RouteComponent,
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) {
+      throw redirect({
+        to: "/login",
+      });
+    }
+  },
+  component: Ai,
 });
 
-function RouteComponent() {
+function Ai() {
   return <div>Hello "/ai"!</div>;
 }

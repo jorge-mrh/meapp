@@ -5,20 +5,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SmartphoneNfc } from "lucide-react";
+import { SmartphoneNfc, LogIn, LogOut } from "lucide-react";
 import { DRPDWN_NAV, MAIN_NAV } from "@/lib/types/nav";
-import { useNavigate, useMatchRoute } from "@tanstack/react-router";
+import { useNavigate, useMatchRoute, Link } from "@tanstack/react-router";
+import { useAuthStore } from "@/stores/authStore";
 
 function MainMenu() {
   const navigate = useNavigate();
   const matchRoute = useMatchRoute();
+  // Get session and signOut action from the store
+  const { session, signOut } = useAuthStore();
 
   const directUser = (path: string) => {
     navigate({ to: path });
   };
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 flex justify-center md:bottom-auto md:top-6">
+    <div className="fixed bottom-6 left-0 right-0 z-50 flex justify-center md:bottom-auto md:top-6">
       <nav className="items-center justify-center space-x-4 rounded-full border bg-background p-2 shadow-lg md:flex">
         {MAIN_NAV.map((item) => {
           const isActive = matchRoute({ to: item.path });
@@ -57,6 +60,26 @@ function MainMenu() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Conditional Sign In / Sign Out Button */}
+        {session ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full"
+            onClick={signOut}
+          >
+            <LogOut className="h-5 w-5" />
+            <span className="sr-only">Sign Out</span>
+          </Button>
+        ) : (
+          <Button variant="ghost" size="icon" className="rounded-full" asChild>
+            <Link to="/login">
+              <LogIn className="h-5 w-5" />
+              <span className="sr-only">Sign In</span>
+            </Link>
+          </Button>
+        )}
       </nav>
     </div>
   );
