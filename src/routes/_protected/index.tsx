@@ -17,9 +17,19 @@ export const Route = createFileRoute("/_protected/")({
 
 function Index() {
   const { data: data, isLoading, error } = useAccountBalance();
+
+  console.log({data})
+
+  const allAccounts = useMemo(() => {
+    if (!data) return [];
+    return data.flatMap((item) => item.accounts);
+  }, [data]);
+
+  console.log({allAccounts})
+
   const personalTotalBalance = useMemo(() => {
-    if (!data) return 0;
-    return data.accounts
+    if (!allAccounts) return 0;
+    return allAccounts
       .filter((acc) => acc.holder_category === "personal")
       .reduce((total, account) => {
         const balance = account.balances.current;
@@ -28,11 +38,11 @@ function Index() {
           return total - balance;
         return total;
       }, 0);
-  }, [data]);
+  }, [allAccounts]);
 
   const businessTotalBalance = useMemo(() => {
-    if (!data) return 0;
-    return data.accounts
+    if (!allAccounts) return 0;
+    return allAccounts
       .filter((acc) => acc.holder_category === "business")
       .reduce((total, account) => {
         const balance = account.balances.current;
@@ -41,17 +51,17 @@ function Index() {
           return total - balance;
         return total;
       }, 0);
-  }, [data]);
+  }, [allAccounts]);
 
   const uncategorizedAccounts = useMemo(() => {
-    if (!data) return [];
-    return data.accounts.filter(
+    if (!allAccounts) return [];
+    return allAccounts.filter(
       (acc) =>
         acc.holder_category === null || acc.holder_category === undefined,
     );
   }, [data]);
 
-  const hasLinkedAccount = !!data && data.accounts.length > 0 && !error;
+  const hasLinkedAccount = !!data && allAccounts.length > 0 && !error;
 
   return (
     <div className="flex flex-1 flex-col">
