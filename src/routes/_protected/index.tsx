@@ -17,7 +17,6 @@ export const Route = createFileRoute("/_protected/")({
 
 function Index() {
   const { data: data, isLoading, error } = useAccountBalance();
-
   console.log({ data });
 
   const personalTotalBalance = useMemo(() => {

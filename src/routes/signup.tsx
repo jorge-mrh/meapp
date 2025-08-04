@@ -5,13 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 
 export const Route = createFileRoute("/signup")({
   beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const { session } = useAuthStore.getState();
     if (session) {
       throw redirect({ to: "/" });
     }

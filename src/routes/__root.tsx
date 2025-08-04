@@ -3,16 +3,24 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/stores/authStore";
+import { useProfileStore } from "@/stores/profileStore";
 
 export const Route = createRootRoute({
+  beforeLoad: async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    useAuthStore.getState().setSession(session);
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", session?.user.id)
+      .single();
+
+      useProfileStore.getState().setProfile(profile);
+  },
   component: () => {
     const { setSession } = useAuthStore();
-
     useEffect(() => {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-      });
-
       const {
         data: { subscription },
       } = supabase.auth.onAuthStateChange((_event, session) => {

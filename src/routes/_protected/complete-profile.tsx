@@ -4,23 +4,18 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { useUpdateProfile } from "@/hooks/profile/useUpdateProfile";
+import { useAuthStore } from "@/stores/authStore";
+import { useProfileStore } from "@/stores/profileStore";
 
 export const Route = createFileRoute("/_protected/complete-profile")({
   beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const { session } = useAuthStore.getState();
     if (!session) {
       throw redirect({ to: "/login" });
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("username")
-      .eq("id", session.user.id)
-      .single();
+  const {profile} = useProfileStore.getState();
 
     if (profile?.username) {
       throw redirect({ to: "/" });

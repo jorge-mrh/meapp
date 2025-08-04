@@ -1,24 +1,17 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { supabase } from "@/lib/supabaseClient";
+import { useAuthStore } from "@/stores/authStore";
+import { useProfileStore } from "@/stores/profileStore";
 
 export const Route = createFileRoute("/_protected")({
   beforeLoad: async ({ location }) => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const { session } = useAuthStore.getState();
 
     if (!session) {
       throw redirect({
         to: "/login",
       });
     }
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("username")
-      .eq("id", session.user.id)
-      .single();
-
+    const {profile} = useProfileStore.getState();
     const isProfileComplete = !!profile?.username;
 
     if (!isProfileComplete && location.pathname !== "/complete-profile") {
