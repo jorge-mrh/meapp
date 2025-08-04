@@ -29,7 +29,7 @@ function MainMenu() {
   };
 
   return (
-    <div className="absolute left-0 right-0 flex justify-center bottom-6 md:bottom-auto md:top-6">
+    <div className="fixed flex justify-center left-0 right-0 top-auto bottom-6 md:bottom-auto md:top-6">
       <nav className="items-center justify-center space-x-4 rounded-full border bg-background p-2 shadow-lg md:flex">
         {session ? (
           isProfileComplete ? (
