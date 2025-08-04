@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { PlaidAccount } from "@/lib/types/account";
+import { formatCurrency } from "@/util/currencyHelper";
 import { Wallet, Briefcase, DollarSign } from "lucide-react";
 
 interface SectionCardsProps {
@@ -23,12 +24,6 @@ export function SectionCards({
   isLoading,
   hasLinkedAccount,
 }: SectionCardsProps) {
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString("de-DE", {
-      style: "currency",
-      currency: "EUR",
-    });
-  };
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2">

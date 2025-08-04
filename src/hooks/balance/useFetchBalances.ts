@@ -10,11 +10,12 @@ const getBalance = async (): Promise<PlaidBalanceResponse[]> => {
   return data as PlaidBalanceResponse[];
 };
 
-export const useAccountBalance = () => {
+export const useFetchBalances = () => {
   return useQuery({
     queryKey: ["plaidBalance"],
     queryFn: getBalance,
     retry: false,
+    enabled: true,
     staleTime: 1000 * 60 * 15, // Cache data for 15 minutes
   });
 };

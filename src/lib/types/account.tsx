@@ -1,3 +1,10 @@
+//ACCOUNT
+export interface GroupedAccount {
+  institution_name: string;
+  item_id: string;
+  accounts: PlaidAccount[];
+}
+
 //BALANCES
 
 export interface PlaidBalances {

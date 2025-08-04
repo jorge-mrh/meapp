@@ -29,7 +29,7 @@ function MainMenu() {
   };
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 z-50 flex justify-center md:bottom-auto md:top-6">
+    <div className="absolute left-0 right-0 flex justify-center bottom-6 md:bottom-auto md:top-6">
       <nav className="items-center justify-center space-x-4 rounded-full border bg-background p-2 shadow-lg md:flex">
         {session ? (
           isProfileComplete ? (
@@ -41,7 +41,7 @@ function MainMenu() {
                   <Button
                     key={item.path}
                     variant={isActive ? "secondary" : "ghost"}
-                    size="icon"
+                    size="lg"
                     className="rounded-full"
                     onClick={() => directUser(item.path)}
                   >
@@ -53,7 +53,7 @@ function MainMenu() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    size="icon"
+                    size="lg"
                     className="rounded-full bg-primary text-primary-foreground"
                   >
                     <SmartphoneNfc className="h-5 w-5" />

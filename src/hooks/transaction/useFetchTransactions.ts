@@ -14,7 +14,6 @@ export const useFetchTransactions = () => {
   return useQuery({
     queryKey: ["plaidTransactions"],
     queryFn: getTransactions,
-    retry: false,
     staleTime: 1000 * 60 * 15, // Cache data for 15 minutes
   });
 };
