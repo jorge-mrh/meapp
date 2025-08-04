@@ -7,7 +7,7 @@ const getBalance = async (): Promise<PlaidBalanceResponse[]> => {
   if (error) {
     throw new Error(error.message);
   }
-  return data;
+  return data as PlaidBalanceResponse[];
 };
 
 export const useAccountBalance = () => {
@@ -15,6 +15,6 @@ export const useAccountBalance = () => {
     queryKey: ["plaidBalance"],
     queryFn: getBalance,
     retry: false,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 15, // Cache data for 15 minutes
   });
 };

@@ -18,14 +18,12 @@ export const Route = createFileRoute("/_protected/")({
 function Index() {
   const { data: data, isLoading, error } = useAccountBalance();
 
-  console.log({data})
+  console.log({ data });
 
   const allAccounts = useMemo(() => {
     if (!data) return [];
     return data.flatMap((item) => item.accounts);
   }, [data]);
-
-  console.log({allAccounts})
 
   const personalTotalBalance = useMemo(() => {
     if (!allAccounts) return 0;
