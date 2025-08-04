@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/authStore";
 const getProfile = async (userId: string) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("username, country, age")
+    .select("*")
     .eq("id", userId)
     .single();
 
@@ -15,7 +15,7 @@ const getProfile = async (userId: string) => {
   return data;
 };
 
-export const useProfile = () => {
+export const useFetchProfile = () => {
   const { user } = useAuthStore();
   return useQuery({
     queryKey: ["profile", user?.id],

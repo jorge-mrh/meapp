@@ -10,6 +10,7 @@ export const Route = createRootRoute({
     const { data: { session } } = await supabase.auth.getSession();
     useAuthStore.getState().setSession(session);
 
+    //Need to fetch it directly from supabase because i can't call hooks here, might put this inside component;
     const { data: profile } = await supabase
       .from("profiles")
       .select("*")
@@ -18,7 +19,10 @@ export const Route = createRootRoute({
 
       useProfileStore.getState().setProfile(profile);
   },
-  component: () => {
+  component: Root,
+});
+
+function Root() {
     const { setSession } = useAuthStore();
     useEffect(() => {
       const {
@@ -36,5 +40,4 @@ export const Route = createRootRoute({
         <Outlet />
       </div>
     );
-  },
-});
+}
