@@ -24,5 +24,9 @@ export const Route = createFileRoute("/_protected")({
 });
 
 function ProtectedLayout() {
-  return <Outlet />;
+  return (
+    <div className="top-auto pb-12 md:bottom-auto md:pt-12">
+      <Outlet />
+    </div>
+  )
 }

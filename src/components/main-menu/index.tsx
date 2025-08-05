@@ -29,14 +29,14 @@ function MainMenu() {
   };
 
   return (
-    <div className="fixed flex justify-center left-0 right-0 top-auto bottom-6 md:bottom-auto md:top-6">
+    <div className="fixed flex justify-center left-0 right-0">
       <nav className="items-center justify-center space-x-4 rounded-full border bg-background p-2 shadow-lg md:flex">
         {session ? (
           isProfileComplete ? (
             // Profile is complete
             <>
               {MAIN_NAV.map((item) => {
-                const isActive = matchRoute({ to: item.path });
+                const isActive = matchRoute({ to: item.path }) as boolean;
                 return (
                   <Button
                     key={item.path}
@@ -46,11 +46,11 @@ function MainMenu() {
                     onClick={() => directUser(item.path)}
                   >
                     <item.Icon className="h-5 w-5" />
-                    <span className="sr-only">{item.label}</span>
+                    <span hidden={!isActive}>{item.label}</span>
                   </Button>
                 );
               })}
-              <DropdownMenu>
+              <DropdownMenu  modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     size="lg"

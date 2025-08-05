@@ -5,5 +5,5 @@ export const Route = createFileRoute("/_protected/ai")({
 });
 
 function Ai() {
-  return <div>Hello "/ai"!</div>;
+  return <div className="flex flex-1 flex-col @container/main"><div>Hello "/ai"!</div></div>;
 }

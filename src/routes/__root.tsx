@@ -35,7 +35,7 @@ function Root() {
     }, [setSession]);
 
     return (
-      <div className="dark bg-background text-foreground min-h-screen">
+      <div className="dark bg-background text-foreground min-h-screen top-auto pb-6 md:bottom-auto md:pt-6">
         <MainMenu />
         <Outlet />
       </div>

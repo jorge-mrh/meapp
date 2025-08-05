@@ -5,5 +5,5 @@ export const Route = createFileRoute("/_protected/accounts")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/_protected/accounts"!</div>;
+  return <div className="flex flex-1 flex-col @container/main"><div>Hello "/accounts"!</div></div>;
 }
