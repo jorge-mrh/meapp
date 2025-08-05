@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/stores/authStore";
 import { useProfileStore } from "@/stores/profileStore";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import MainLoader from "@/components/loaders/mainLoader";
 
 export const Route = createRootRoute({
   loader: async () => {
@@ -33,11 +34,7 @@ function Root() {
     }, [setSession]);
 
     if (isLoading) {
-      return (
-        <div className="dark bg-background text-foreground min-h-screen flex items-center justify-center">
-          Loading...
-        </div>
-      );
+      return <MainLoader />;
     }
 
     if (error) {
