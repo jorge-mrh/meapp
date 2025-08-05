@@ -4,26 +4,24 @@ import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/stores/authStore";
 import { useProfileStore } from "@/stores/profileStore";
+import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 
 export const Route = createRootRoute({
-  beforeLoad: async () => {
+  loader: async () => {
     const { data: { session } } = await supabase.auth.getSession();
     useAuthStore.getState().setSession(session);
-
-    //Need to fetch it directly from supabase because i can't call hooks here, might put this inside component;
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", session?.user.id)
-      .single();
-
-      useProfileStore.getState().setProfile(profile);
   },
   component: Root,
 });
 
 function Root() {
     const { setSession } = useAuthStore();
+    const {data:profile, isLoading, error} = useFetchProfile();
+
+    useEffect(() => {
+      useProfileStore.getState().setProfile(profile);
+    }, [profile])
+
     useEffect(() => {
       const {
         data: { subscription },
@@ -33,6 +31,22 @@ function Root() {
 
       return () => subscription.unsubscribe();
     }, [setSession]);
+
+    if (isLoading) {
+      return (
+        <div className="dark bg-background text-foreground min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="dark bg-background text-foreground min-h-screen flex items-center justify-center text-destructive">
+          Error loading profile: {error.message}
+        </div>
+      );
+    }
 
     return (
       <div className="dark bg-background text-foreground min-h-screen top-auto pb-6 md:bottom-auto md:pt-6">

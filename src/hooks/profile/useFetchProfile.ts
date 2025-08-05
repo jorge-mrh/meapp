@@ -21,5 +21,6 @@ export const useFetchProfile = () => {
     queryKey: ["profile", user?.id],
     queryFn: () => getProfile(user!.id),
     enabled: !!user,
+    staleTime: 1000 * 60 * 20, // Cache data for 20 minutes
   });
 };
