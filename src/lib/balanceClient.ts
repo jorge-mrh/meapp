@@ -26,35 +26,47 @@ export function getFormattedBalanceData(
     return { assets: 0, liabilities: 0, netWorth: 0, groupedAccounts: [] };
   }
 
+  const personalAccounts: GroupedAccount[] = [];
+  const liabilityAccounts: GroupedAccount[] = [];
+  console.log({data})
+  data.forEach((d:PlaidBalanceResponse) => {
+    
+    //Gather all personal accounts
+    const basePersonalAccounts = d.accounts.filter((acc => acc.holder_category === 'personal'))
+    const personalAccountsGrouped: GroupedAccount = {
+      accounts: basePersonalAccounts,
+      institution_name: d.item.institution_name,
+      item_id: d.item.item_id,
+    }
+    personalAccounts.push(personalAccountsGrouped);
+
+    //Gather all liability accounts
+    const baseLiabilityAccounts = d.accounts.filter((acc => !acc.holder_category && acc.type === 'loan' || acc.type === "credit"));
+      const liabilityAccountsGrouped: GroupedAccount = {
+        accounts: baseLiabilityAccounts,
+        institution_name: d.item.institution_name,
+        item_id: d.item.item_id,
+    }
+    liabilityAccounts.push(liabilityAccountsGrouped);
+
+  })
+
   let totalAssets = 0;
   let totalLiabilities = 0;
 
-  const allAccounts = data.flatMap((item) => item.accounts);
+  const allPersonalAccounts = personalAccounts.flatMap((item) => item.accounts);
+  const allCurrentBalances = allPersonalAccounts.flatMap((item) => item.balances.current);
+  totalAssets = allCurrentBalances.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  allAccounts.forEach((account) => {
-    // For this summary, let's focus on personal accounts.
-    if (account.holder_category !== "business") {
-      if (account.type === "depository" || account.type === "investment") {
-        totalAssets += account.balances.current;
-      } else if (account.type === "credit" || account.type === "loan") {
-        totalLiabilities += account.balances.current;
-      }
-    }
-  });
+  const allLiabilityAccounts = liabilityAccounts.flatMap((item) => item.accounts);
+  const allCurrentLiabilityValues = allLiabilityAccounts.flatMap((item) => item.balances.current);
+  totalLiabilities = allCurrentLiabilityValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  const grouped = data.reduce<GroupedAccount[]>((acc, item) => {
-    acc.push({
-      institution_name: item.item.institution_name,
-      item_id: item.item.item_id,
-      accounts: item.accounts,
-    });
-    return acc;
-  }, []);
 
   return {
     assets: totalAssets,
     liabilities: totalLiabilities,
     netWorth: totalAssets - totalLiabilities,
-    groupedAccounts: grouped,
+    groupedAccounts: personalAccounts,
   };
 }
