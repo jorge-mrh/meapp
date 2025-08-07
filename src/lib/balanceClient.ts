@@ -28,9 +28,7 @@ export function getFormattedBalanceData(
 
   const personalAccounts: GroupedAccount[] = [];
   const liabilityAccounts: GroupedAccount[] = [];
-  console.log({data})
-  data.forEach((d:PlaidBalanceResponse) => {
-    
+  data.forEach((d:PlaidBalanceResponse) => {    
     //Gather all personal accounts
     const basePersonalAccounts = d.accounts.filter((acc => acc.holder_category === 'personal'))
     const personalAccountsGrouped: GroupedAccount = {
@@ -48,7 +46,6 @@ export function getFormattedBalanceData(
         item_id: d.item.item_id,
     }
     liabilityAccounts.push(liabilityAccountsGrouped);
-
   })
 
   let totalAssets = 0;

@@ -53,7 +53,7 @@ export function SectionCards({
   }
 
   return (
-      <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {cardsToShow.map((card) => (
           <Card>          
             <CardHeader>
@@ -67,12 +67,12 @@ export function SectionCards({
               {card.value}
             </CardContent>
             <CardFooter>
-              <div className="mr-8">
+              <div>
                 {card.relatedAccounts.map((acc) => (
                   <Badge 
                     key={acc.item_id}
                     variant="secondary" 
-                    className="bg-blue-500"
+                    className="bg-blue-500 mr-8"
                   >
                     {acc.institution_name}
                   </Badge>

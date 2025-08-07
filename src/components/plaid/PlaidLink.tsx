@@ -3,6 +3,7 @@ import { usePlaidLink } from "react-plaid-link";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link2 } from "lucide-react";
 
 export const PlaidLink = () => {
   const [linkToken, setLinkToken] = useState<string | null>(null);
@@ -33,8 +34,11 @@ export const PlaidLink = () => {
   });
 
   return (
-    <Button onClick={() => open()} disabled={!ready}>
-      Link Bank Account
-    </Button>
+    <div>
+      <Button onClick={() => open()} disabled={!ready}>
+        <Link2 /> Manage accounts
+      </Button>
+    </div>
+
   );
 };
