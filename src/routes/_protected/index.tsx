@@ -4,7 +4,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
 } from "@/components/ui/card";
 import { useMemo } from "react";
@@ -14,6 +13,8 @@ import {
   type BalanceDataFormatParams,
 } from "@/lib/balanceClient";
 import { formatCurrency } from "@/util/currencyHelper";
+import type { HomeCard } from "@/lib/types/card";
+import { SectionCards } from "@/components/section-cards";
 
 export const Route = createFileRoute("/_protected/")({
   component: Index,
@@ -22,51 +23,43 @@ export const Route = createFileRoute("/_protected/")({
 function Index() {
   const { data, isLoading, error } = getBalanceData();
 
-  const {
-    assets,
-    liabilities,
-    netWorth,
-    groupedAccounts,
-  }: BalanceDataFormatParams = useMemo(() => {
+  const formattedBalanceData: BalanceDataFormatParams = useMemo(() => {
     const balanceData: BalanceDataFormatParams = getFormattedBalanceData(data);
-
     return balanceData;
   }, [data]);
 
-  console.log({ assets, liabilities, netWorth, groupedAccounts });
+  console.log({formattedBalanceData});
+  const cardsData: HomeCard[] = useMemo(() => {
+    const assetsCard: HomeCard = {
+      title: 'Total Assets',
+      description: 'This is the sum of what you currently have in your linked accounts',
+      value: formatCurrency(formattedBalanceData.assets),
+      relatedAccounts: formattedBalanceData.groupedAccounts,
+    }
+
+    const liabilitiesCard: HomeCard = {
+      title: 'Total Liabilities',
+      description: 'This is the sum of what you currently owe in your linked accounts',
+      value: formatCurrency(formattedBalanceData.liabilities),
+      relatedAccounts: formattedBalanceData.groupedAccounts
+    }
+
+    const netWorthCard: HomeCard = {
+      title: 'Net Worth',
+      description: 'This is your networth, based on your linked accounts',
+      value: formatCurrency(formattedBalanceData.netWorth),
+      relatedAccounts: formattedBalanceData.groupedAccounts,
+    }
+
+    return [assetsCard, liabilitiesCard, netWorthCard];
+  }, [formattedBalanceData])
+
 
   return (
     <div className="flex flex-1 flex-col @container/main">
-      <div className="flex flex-col gap-4 p-4 pt-24 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
         {/* Main Financial Summary Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Financial Overview</CardTitle>
-            <CardDescription>
-              A summary of your linked personal accounts.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-4 @sm/main:grid-cols-3">
-            <div className="rounded-lg border bg-secondary p-4">
-              <p className="text-sm text-secondary-foreground">Total Assets</p>
-              <p className="text-2xl font-bold text-secondary-foreground">
-                {formatCurrency(assets)}
-              </p>
-            </div>
-            <div className="rounded-lg border p-4">
-              <p className="text-sm text-muted-foreground">Total Liabilities</p>
-              <p className="text-2xl font-bold text-destructive">
-                {formatCurrency(liabilities)}
-              </p>
-            </div>
-            <div className="rounded-lg border bg-primary p-4">
-              <p className="text-sm text-primary-foreground">Net Worth</p>
-              <p className="text-2xl font-bold text-primary-foreground">
-                {formatCurrency(netWorth)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <SectionCards cardsToShow={cardsData} isDataLoading={isLoading}></SectionCards>
 
         {/* Linked Accounts Section */}
         <div className="flex items-center justify-between">
@@ -81,9 +74,9 @@ function Index() {
           </p>
         )}
 
-        {groupedAccounts.length > 0 && (
+        {formattedBalanceData.groupedAccounts.length > 0 && (
           <div className="flex flex-col gap-4">
-            {groupedAccounts.map((group) => (
+            {formattedBalanceData.groupedAccounts.map((group) => (
               <Card key={group.item_id}>
                 <CardHeader>
                   <CardTitle>{group.institution_name}</CardTitle>
